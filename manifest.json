@@ -1,9 +1,10 @@
 {
     "name": "Malverticus",
-    "version": "0.1",
+    "version": "0.15",
     "description": "Malverticus the Malvertisement and Malicious URL Blocker",
     "permissions": [
-        "webRequest","webRequestBlocking","<all_urls>"
+        "webRequest","webRequestBlocking","<all_urls>","*://*/*",
+        "tabs"
     ],
     "background":{
         "scripts": ["background.js"]
