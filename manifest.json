@@ -1,19 +1,29 @@
 {
+    
+    "manifest_version": 3 ,
     "name": "Malverticus",
     "version": "0.15",
     "description": "Malverticus the Malvertisement and Malicious URL Blocker",
     "permissions": [
-        "webRequest","webRequestBlocking","<all_urls>","*://*/*",
+        "webRequest",
         "tabs"
     ],
-    "background":{
-        "scripts": ["background.js"]
-    },
+    "host_permissions": [
+        "<all_urls>"
+      ],
+    "background": {
+        "service_worker": "background.js"
+      },
     "icons": {
         "16": "icons/logo.png",
         "48": "icons/logo.png",
         "128": "icons/logo.png"
     },
-    "manifest_version": 2
+    "web_accessible_resources":[
+        {
+            "resources": ["Lists/ALLOW.txt"],
+            "matches":["<all_urls>"]
+        }
+    ]
 
 }
