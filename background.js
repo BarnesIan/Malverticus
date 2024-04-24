@@ -88,19 +88,6 @@ async function classifyUrl(url) {
     { urls: ["<all_urls>"] },
     ["blocking"]
 );
-
-// Example pop-up blocking logic
-chrome.webRequest.onBeforeRequest.addListener(
-    function (details) {
-        if (details.type === "sub_frame") {
-            return { cancel: true }; // Block the popup
-        }
-        return { cancel: false };
-    },
-    { urls: ["<all_urls>"], types: ["script"] },
-    ["blocking"]
-);
-
 // Stop the ability to open new tabs in the browser without users consent
 chrome.tabs.onCreated.addListener(tab => {
   if (tab.url === 'chrome://newtab/' || tab.url === "") {

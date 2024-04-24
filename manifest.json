@@ -2,7 +2,7 @@
     
     "manifest_version": 2 ,
     "name": "Malverticus",
-    "version": "0.5",
+    "version": "1.0",
     "description": "Malverticus the Malvertisement and Malicious URL Blocker",
     "permissions": [
         "webRequest",
