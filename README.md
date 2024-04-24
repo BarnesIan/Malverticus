@@ -25,9 +25,11 @@ Malverticus combines several cutting-edge technologies to provide robust and eff
 ### JavaScript
 + Interactive Web Pages: Utilizes JavaScript alongside HTML and CSS to build interactive user interfaces for real-time web request handling.
 + Google Chrome Libraries: Connects with Chrome's extensive libraries to listen and respond to browser requests efficiently.
-### Installation
-## Installation
 
+# Follow setup instructions
+### Usage
+After installation, the extension can be loaded into Chrome through the extensions page by enabling Developer Mode and loading the unpacked extension.
+### Installation
 Follow these steps to install the Malverticus Web Extension Browser:
 
 | Step | Action | Command |
@@ -41,10 +43,6 @@ Follow these steps to install the Malverticus Web Extension Browser:
 
 *Note: Replace `npm install` with the appropriate command if your project uses a different technology or no additional dependencies are needed.*
 *Note: Personal AllowLists.txt and BlockList.txt are required, These can be found by using Alexa top 100K urls or any source of Benign & Malicious URLS datalist.
-
-# Follow setup instructions
-### Usage
-After installation, the extension can be loaded into Chrome through the extensions page by enabling Developer Mode and loading the unpacked extension.
 
 ### Contributing
 Contributions to Malverticus are welcome! Please fork the repository and submit a pull request with your changes. For major changes, please open an issue first to discuss what you would like to change.
