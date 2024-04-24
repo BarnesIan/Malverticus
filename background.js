@@ -1,29 +1,30 @@
 let allowList = [];
+let blockList = [];
 
-function loadAllowList() {
- return fetch(chrome.runtime.getURL('Lists/ALLOW.txt'))
+//Load lists that are stored
+function loadList(fileName) {
+  return fetch(chrome.runtime.getURL(`Lists/${fileName}`))
     .then(response => response.text())
     .then(text => {
-      allowList = text.split('\n').map(domain => domain.trim());  // Assuming each domain is on a new line
-      console.log('Allow List Loaded:', allowList);
-      return allowList;
+      return text.split('\n').map(domain => domain.trim());
     })
-    .catch(error =>{
-       console.error('Failed to load allow list:', error);
-       return [];
-  });
+    .catch(error => {
+      console.error(`Failed to load ${fileName}:`, error);
+      return [];
+    });
 }
 
-async function ensureAllowListLoaded() {
+//Make sure both lists are loaded into memory
+async function ensureListsLoaded() {
   if (!allowList.length) {
     console.log("Loading allow list...");
-    allowList = await loadAllowList().catch(error => {
-      console.error("Error loading allow list:", error);
-      return [];  // Return an empty list if fails
-    });
+    allowList = await loadList('ALLOW.txt');
+  }
+  if (!blockList.length) {
+    console.log("Loading block list...");
+    blockList = await loadList('BLOCK.txt');
   }
 }
-
 function normalizeUrl(url) {
   let normalizedUrl = new URL(url);
   normalizedUrl = normalizedUrl.hostname.replace(/^www\./, ''); // Remove "www." if present
@@ -58,18 +59,23 @@ async function classifyUrl(url) {
             console.log('Access to classifier API, allowing');
             return { cancel: false }; // Allow the request immediately, no further checks needed
         }
-        await ensureAllowListLoaded();
+        await ensureListsLoaded();
         const url = new URL(details.url);
         const domain = normalizeUrl(url.href);
+        console.log(`Checking access to ${domain} from block list`);
+        if (blockList.includes(domain)) {
+          console.log(`Blocking access to ${domain} from block list`);
+          return { cancel: true };
+        }
         if (allowList.includes(domain)) {
             console.log(`Allowing access to ${domain}`);
-            return { cancel: true };
+            return { cancel: false };
         } else {
             console.log(`Could not find ${domain}, classifying...`);
             const classification = await classifyUrl(details.url);
             if (!classification || classification.Classified !== 1) {
-                console.log(`${domain} is benign or failed classification, loading`);
-                return { cancel: false };
+                console.log(`${domain} is benign or failed classification, blocking`);
+                return { cancel: true };
             }
             const { Classified, "Domain age in days": domainAgeDays } = classification;
             if (Classified === 1 && domainAgeDays > 1000) {
