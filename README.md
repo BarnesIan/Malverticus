@@ -10,7 +10,7 @@ Malverticus is a powerful Chrome extension designed to enhance browser security 
 + Dynamic Blocking: Intelligently blocks harmful web content before it reaches the user.
 + User-Friendly Interface: Offers clear notifications and easy control options.
 ## Architecture Diagram
-![Architecture](./images/Architecture.png)
+![Architecture](./images/Devarchitecture.jpg)
 
 ## Technologies Used
 Malverticus combines several cutting-edge technologies to provide robust and efficient functionality:
