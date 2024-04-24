@@ -92,11 +92,34 @@ async function classifyUrl(url) {
 // Example pop-up blocking logic
 chrome.webRequest.onBeforeRequest.addListener(
     function (details) {
-        if (details.type === "popup") {
+        if (details.type === "sub_frame") {
             return { cancel: true }; // Block the popup
         }
         return { cancel: false };
     },
     { urls: ["<all_urls>"], types: ["script"] },
     ["blocking"]
+);
+
+// Stop the ability to open new tabs in the browser without users consent
+chrome.tabs.onCreated.addListener(tab => {
+  if (tab.url === 'chrome://newtab/' || tab.url === "") {
+      console.log("New empty tab opened, likely by the user directly");
+  } else {
+      console.log("Tab opened potentially without user interaction:", tab.url);
+      chrome.tabs.remove(tab.id); // Close the tab
+  }
+});
+
+// Block pop ups by sub_frame
+chrome.webRequest.onBeforeRequest.addListener(
+  details => {
+      if (details.type === "sub_frame") {
+          console.log("Blocking a pop-up or ad frame:", details.url);
+          return { cancel: true }; // Block the sub_frame
+      }
+      return { cancel: false };
+  },
+  { urls: ["<all_urls>"] },
+  ["blocking"]
 );
