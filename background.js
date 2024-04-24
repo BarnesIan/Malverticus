@@ -123,3 +123,38 @@ chrome.webRequest.onBeforeRequest.addListener(
   { urls: ["<all_urls>"] },
   ["blocking"]
 );
+
+
+//Blocking Content
+chrome.webRequest.onHeadersReceived.addListener(
+  function(details) {
+      let block = false;
+      const fileTypesToBlock = ["application/x-shockwave-flash", "image/gif"];
+      const sizeLimit = 1000000; // Size limit for content, in bytes for stopping big files
+
+      // Checking the response headers for content type and size
+      for (let i = 0; i < details.responseHeaders.length; i++) {
+          const header = details.responseHeaders[i];
+
+          // Check for content type
+          if (header.name.toLowerCase() === "content-type" && fileTypesToBlock.includes(header.value.toLowerCase())) {
+              block = true;
+          }
+
+          // Check for content size if needed
+          if (header.name.toLowerCase() === "content-length" && parseInt(header.value) > sizeLimit) {
+              block = true;
+          }
+
+          // If both conditions are met, block the content
+          if (block) {
+              console.log(`Blocking ${details.url} due to content type or size restrictions.`);
+              return { cancel: true };
+          }
+      }
+
+      return { cancel: false };
+  },
+  { urls: ["<all_urls>"], types: ["image", "object", "other"] },
+  ["blocking", "responseHeaders"]
+);
